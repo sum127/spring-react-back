@@ -34,8 +34,33 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// 테스트에서 로그사용가능
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	
+	// 빌드시 테스트 제외 하려면 ./gradlew clean build -x test
+	// vs에서 clean build 깔끔하게 하려면 view -> command palette -> clean -> serverworkspace 선택 후 재시작
+
+	// querydsl 디펜던시추가 버전마다 다름 추가 후 컴파일
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+	// dto를 entity로 바꾸는 작업을 하기위한 모델 생성 (간단한 구조의 경우 사용)
+	implementation 'org.modelmapper:modelmapper:3.2.2'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+        events "passed", "failed", "skipped", "standardOut"
+    }
 }
